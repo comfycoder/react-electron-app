@@ -1,14 +1,37 @@
 {
   "name": "my-app",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "main": "electron/main.js",
+  "description": "My Electron app",
+  "author": "Dennis Moon",
+  "build": {
+    "appId": "com.aiq-solutions.my-electron-app",
+    "productName": "MyElectronApp",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
   "scripts": {
     "dev": "vite",
     "electron": ".\\node_modules\\.bin\\electron .",
     "start": "yarn build:main && yarn build && yarn electron",
     "build:main": "tsc electron/main.ts --outDir electron --module commonjs",
     "build": "tsc -b && vite build",
+    "dist": "electron-builder",
     "lint": "eslint .",
     "lint:fix": "eslint --fix .",
     "preview": "vite preview",

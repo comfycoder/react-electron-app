@@ -82,6 +82,41 @@ var menuTemplate = __spreadArray(__spreadArray([], (isMac
     {
         label: 'File',
         submenu: [
+            {
+                label: 'Open File...',
+                accelerator: 'CmdOrCtrl+O',
+                click: function () { return __awaiter(void 0, void 0, void 0, function () {
+                    var _a, dialog, BrowserWindow, win, result;
+                    return __generator(this, function (_b) {
+                        switch (_b.label) {
+                            case 0:
+                                _a = require('electron'), dialog = _a.dialog, BrowserWindow = _a.BrowserWindow;
+                                win = BrowserWindow.getFocusedWindow();
+                                if (!win)
+                                    return [2 /*return*/];
+                                return [4 /*yield*/, dialog.showOpenDialog(win, {
+                                        properties: ['openFile'],
+                                        filters: [
+                                            { name: 'DICOM Files', extensions: ['dcm'] },
+                                            { name: 'JSON Files', extensions: ['json'] },
+                                            { name: 'CSV Files', extensions: ['csv'] },
+                                            { name: 'All Files', extensions: ['*'] },
+                                            // { name: 'Text Files', extensions: ['txt'] }, // Optional: Add specific filters
+                                        ]
+                                    })];
+                            case 1:
+                                result = _b.sent();
+                                if (!result.canceled && result.filePaths.length > 0) {
+                                    // Send file path to renderer or process it here
+                                    console.log('File selected:', result.filePaths[0]);
+                                    win.webContents.send('file-opened', result.filePaths[0]);
+                                }
+                                return [2 /*return*/];
+                        }
+                    });
+                }); }
+            },
+            { type: 'separator' },
             isMac ? { role: 'close' } : { role: 'quit' }
         ]
     },

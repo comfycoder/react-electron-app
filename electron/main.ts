@@ -41,6 +41,33 @@ const menuTemplate: MenuItemConstructorOptions[] = [
   {
     label: 'File',
     submenu: [
+      {
+        label: 'Open File...',
+        accelerator: 'CmdOrCtrl+O',
+        click: async () => {
+          const { dialog, BrowserWindow } = require('electron');
+          const win = BrowserWindow.getFocusedWindow();
+          if (!win) return;
+
+          const result = await dialog.showOpenDialog(win, {
+            properties: ['openFile'],
+            filters: [
+              { name: 'DICOM Files', extensions: ['dcm'] },
+              { name: 'JSON Files', extensions: ['json'] },
+              { name: 'CSV Files', extensions: ['csv'] },
+              { name: 'All Files', extensions: ['*'] },
+              // { name: 'Text Files', extensions: ['txt'] }, // Optional: Add specific filters
+            ]
+          });
+
+          if (!result.canceled && result.filePaths.length > 0) {
+            // Send file path to renderer or process it here
+            console.log('File selected:', result.filePaths[0]);
+            win.webContents.send('file-opened', result.filePaths[0]);
+          }
+        }
+      },
+      { type: 'separator' as const },
       isMac ? { role: 'close' as const } : { role: 'quit' as const }
     ]
   },
